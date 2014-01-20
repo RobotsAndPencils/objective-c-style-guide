@@ -506,11 +506,6 @@ Good:
 - (void)setExample:(NSString *)text;
 ```
 
-Up for debate:
-
-```objc
-- (void)setExample:(NSString*)text;
-```
 
 Bad:
 
@@ -518,6 +513,31 @@ Bad:
 - (void)setExample: (NSString *)text;
 - (void)setExample:(NSString *) text;
 ```
+
+Init Methods
+---------------
+Init methods should return instancetype instead of id. Generally this is the one place ivars should be used instead of properties because the class may be in an inconsistent state until it is fully initialized.
+
+```objc
+- (instancetype)init {
+  self = [super init];
+  if (self) {
+    // ...
+  }
+  return self;
+}
+```
+
+Dealloc Methods
+---------------
+Dealloc methods are no longer required when using arc but in certain cases must be used to remove observers, KVO, etc.
+
+```objc
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+```
+
 
 Classes
 =======
@@ -598,7 +618,7 @@ When synthesizing the instance variable, use `@synthesize var = _var;` as this p
 @property
 ---------
 
-Property definitions should be used in place of ivars. When defining properties, put strong/weak/retain/assign first then nonatomic because this matches what Xcode does when dragging from Interface Builder to header files.
+Property definitions should be used in place of ivars. When defining properties, put strong/weak/retain/assign first then nonatomic for consistency.
 
 ```objc
 @property (weak, nonatomic) IBOutlet UIWebView *messageWebView;
@@ -696,19 +716,6 @@ Good:
 }
 ```
 
-Acceptable:
-
-```objc
-- (void)checkCondition; {
-    if (bar) {
-       NSLog(@"Woof!");
-    }
-    else {
-       NSLog(@"Meow!");
-    }
-}
-```
-
 Prevents Bugs:
 
 ```objc
@@ -743,7 +750,7 @@ Always leave the code in better condition than you found it.
 
 Copyrights
 =====================
-By default, use a Robots & Pencils copyright, not your own company. There may be special circumstances where it should be changed to a customer name.
+By default, use a Robots & Pencils copyright. There may be special circumstances where it should be changed to a customer name.
 
 ```objc
 //  Copyright (c) 2012 Robots and Pencils Inc. All rights reserved.
@@ -753,7 +760,7 @@ Set the Organization in your .xcodeproj to override your default company name fo
 
 Proper Code Nutrition
 =====================
-Avoid magic numbers with no meaning, preferring instead a named variable or constant.
+Avoid magic numbers with no meaning, preferring instead a named variable or constant (see following examples).
 
 Integers
 --------
@@ -811,6 +818,18 @@ const NSString * RBKConstantString = @""; // pointer to constant
 NSString const * RBKConstantString = @"";
 ```
 
+Basic Code Principles
+-------
+* Each function/method should aim to perform one action/task that reflects it's name.
+* Since each function/method performs one action/task each one should be relatively short. If the code does not fit on one screen for example, you know you have a problem!
+* Declare local variables as close to the code they are used in as possible.
+* Always aim to reduce code nesting (ie a statement that is nested in an if, an if, a for and an if is hard for the brain to evaluate.  Refactor!).
+
+Testing
+============
+* You are responsible for thoroughly testing your own code before passing off to quality assurance.
+* Your code must always be tested by a minimum of one other person that is not you.
+* Automated tests should always be added to at least critical code sections at a minimum (ex. algorithm to calculate mortgage details for a bank).
 
 Inspiration
 ============
