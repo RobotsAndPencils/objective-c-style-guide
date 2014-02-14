@@ -621,10 +621,15 @@ When synthesizing the instance variable, use `@synthesize var = _var;` as this p
 Property definitions should be used in place of ivars. When defining properties, put strong/weak/retain/assign first then nonatomic for consistency.
 
 ```objc
-@property (weak, nonatomic) IBOutlet UIWebView *messageWebView;
+@property (strong, nonatomic) IBOutlet UIWebView *messageWebView;
 ```    
 
-*Note: IBOutlets should be `weak` unless they are a top-level item in a xib (e.g. the top-level view is `strong`, anything beneath it is `weak`)
+*Note: [Apple recommends](https://developer.apple.com/library/ios/documentation/General/Conceptual/CocoaEncyclopedia/Outlets/Outlets.html) that IBOutlets should be `weak` unless they are a top-level item in a xib (e.g. the top-level view is `strong`, anything beneath it is `weak`). We prefer to make all IBOutlets `strong` for a few reasons:
+
+1. If a `weak` IBOutlet is removed from the view heirarchy at any time then it may be deallocated. This can cause a crash if it is later referenced, perhaps to add it to a view again.
+2. "Since iOS 6, views are not unloaded anymore, but loaded once and then stick around as long as their controller is there. So strong properties won't matter. They also won't create strong reference cycles, since they point down the strong reference graph." [(Source)](http://stackoverflow.com/a/20506127/1082395) So the outlet's retain type itself won't cause a retain cycle.
+2. Good design should necessitate that any strongly-referenced subviews only ever have weak references back up the view heirarchy to prevent retain cycles.
+2. There are no percievable performance differences between the two.
 
 Info about the overhead and performance of properties vs ivars can be found [here](http://blog.bignerdranch.com/4005-should-i-use-a-property-or-an-instance-variable/).
 
