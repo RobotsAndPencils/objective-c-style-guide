@@ -481,7 +481,7 @@ Do not use "and" to link keywords that are attributes of the receiver.
 Good:
 
 ```objc
-- (NSInteger)runModalForDirectory:(NSString *)path file:(NSString *) name types:(NSArray *)fileTypes;
+- (NSInteger)runModalForDirectory:(NSString *)path file:(NSString *)name types:(NSArray *)fileTypes;
 ```
 
 Bad:
