@@ -223,13 +223,13 @@ Expressions
 Good: 
 
 ```objc
-[objectArray count]
+view.frame
 ```
 
 Bad: 
 
 ```objc
-objectArray.count
+[view frame]
 ```
     
 Good:
