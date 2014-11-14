@@ -362,6 +362,7 @@ Organization
 
 ```objc
 #pragma mark - Lifecycle
+
 + (instancetype)objectWithThing:(id)thing {}
 - (instancetype)init {}
 - (void)dealloc {}
