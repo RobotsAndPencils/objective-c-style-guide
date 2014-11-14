@@ -52,7 +52,7 @@ Whitespace
 
 * Indent using 4 spaces. Never indent with tabs. Be sure to set this preference in Xcode (Xcode defaults to 4 spaces).
 
-* Separate imports from the rest of your file by 1 space. Optionally group imports if there are many (but try to have less dependencies). Frameworks first?
+* Separate imports from the rest of your file by 1 space. Optionally group imports if there are many (but try to have less dependencies). Generally strive to include frameworks first.
 
 ``` obj-c
 #import <AwesomeFramework/AwesomeFramework.h>
@@ -142,7 +142,8 @@ Bad:
 ```
 
 * Whitespace should in *all* cases be used to aid readability. Readability is highly subjective, so here are some rough guides:
-  * Use new lines to delimit chunks of related code (approx 4-5 lines). If more than 4-5 lines are grouped, consider refactoring those lines into another method.
+  * Use new lines to delimit chunks of related code (approx 4-5 lines). If more than 4-5 lines are grouped, consider refactoring those lines into another method. 
+    * By grouping related lines of code it naturally starts to show where the method can be refactored into smaller reusable units
   * One blank line is generally sufficient.
   * Avoid extraneous new lines between nested sets of parenthesis.
   * Avoid blank lines at the end of methods. (Consider delimiting the final return value with one though.)
