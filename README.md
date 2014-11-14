@@ -103,15 +103,15 @@ Note:
 1. all the `signatureViewController`-related lines are together
 2. the new line delimits the end of configuration of `signatureViewController`
 3. the `tapRecognizer` instantiation and configuration is grouped, and not mixed with unrelated code
-4. a new line after the opening `{` and a new line before the closing `}` are permissible. In some cases they aid readability and in others they yield and overabundance of whitespace.
+4. a new line after the opening `{` and a new line before the closing `}` are permissible. In some cases they aid readability and in others they yield an overabundance of whitespace.
 
 Good:
 ```objc
 
 @interface BBProofOfLossViewController () <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, BBAutocompletePopoverDateTextFieldDelegate, BBPopoverSignatureImageViewDelegate>
 
-@property (strong, nonatomic) NSArray *insuredItems;
-@property (strong, nonatomic) BBProofOfLossForm *proofOfLossForm;
+@property (strong, nonatomic) NSArray *targetItems;
+@property (strong, nonatomic) BBCustomForm *customForm;
 
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *addressLabel;
@@ -203,7 +203,7 @@ Note:
 
 1. method colons aren't aligned. (Method signature is not well suited to colon aligning)
 2. Happy path is nested. (Early return is missing)
-3. Lots of extra blank lines that break up readability
+3. Lots of extra blank lines that break up readability. (Whitespace is failing to define context)
 4. URL string is hardcoded (not environment-aware)
 5. `NSMutableURLRequest` instantiation is spread over several lines
 
@@ -235,7 +235,10 @@ static NSString * const BBAPIBaseURLString = @"https://api.example.com/v1/quux/~
     [viewController dismissViewControllerAnimated:YES completion:nil];
 
     if (error) {
-        NSLog(@"Authentication failed %@", [error description]);
+        NSLog(@"Authentication failed %@", error.localizedDescription);
+
+        // TODO: call our own completion block with this error?
+
 	     return;
     }
     
