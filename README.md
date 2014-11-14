@@ -51,6 +51,70 @@ Whitespace
 ==========
 
 * Indent using 4 spaces. Never indent with tabs. Be sure to set this preference in Xcode (Xcode defaults to 4 spaces).
+
+* Separate imports from the rest of your file by 1 space. Optionally group imports if there are many (but try to have less dependencies). Generally strive to include frameworks first.
+
+``` obj-c
+#import <AwesomeFramework/AwesomeFramework.h>
+#import <AnotherFramework/AnotherFramework.h>
+
+#import "SomeDependency.h"
+#import "SomeOtherDependency.h"
+
+@interface MyClass
+```
+
+* Use one empty line between class extension and implementation in .m file.
+
+``` obj-c
+@interface MyClass ()
+
+// Properties - empty line above and below
+
+@end
+
+@implementation MyClass
+
+// Body - empty line above and below
+
+@end
+
+```
+
+* Always end a file with a newline.
+
+![](http://cl.ly/image/2g3b0C2a3F0c/Image%202014-11-14%20at%2010.51.17%20AM.png)
+
+* When using pragma marks leave 1 newline before and after.
+
+``` obj-c
+- (CGSize)intrinsicContentSize {
+    return CGSizeMake(12, 12);
+}
+
+#pragma mark - Private
+
+- (void)setup {
+    [self addGestureRecognizer:[[NSClickGestureRecognizer alloc] initWithTarget:self action:@selector(clicked:)]];
+}
+```
+
+* When doing math use a single space between operators. Unless that operator is unary in which case don't use a space.
+
+```obj-c
+NSInteger index = rand() % 50 + 25; // arc4random_uniform(50) should be used insted of `rand() % 50`, but doesn't illustrate the principle well
+index++;
+index += 1;
+index--;
+```
+
+* When doing logic, a single space should follow the `if` and a single space should preceed the `{`
+
+``` obj-c
+if (alpha + beta <= 0) && (kappa + phi > 0) {
+}
+```
+
 * Colon-aligning method invocation should often be avoided.  There are cases where a method signature may have >= 3 colons and colon-aligning makes the code more readable. Please do **NOT** however colon align methods containing blocks because Xcode's indenting makes it illegible.
 
 Good:
@@ -77,6 +141,221 @@ Bad:
                  }];
 ```
 
+* Whitespace should in *all* cases be used to aid readability. Readability is highly subjective, so here are some rough guides:
+  * Use new lines to delimit chunks of related code (approx 4-5 lines). If more than 4-5 lines are grouped, consider refactoring those lines into another method. 
+    * By grouping related lines of code it naturally starts to show where the method can be refactored into smaller reusable units
+  * One blank line is generally sufficient.
+  * Avoid extraneous new lines between nested sets of parenthesis.
+  * Avoid blank lines at the end of methods. (Consider delimiting the final return value with one though.)
+
+Good:
+  
+```objc
+- (void)awakeFromNib {
+    UIStoryboard *signatureStoryboard = [UIStoryboard storyboardWithName:@"BBPopoverSignature" bundle:nil];
+    self.signatureViewController = [signatureStoryboard instantiateViewControllerWithIdentifier:@"BBPopoverSignature"];
+    self.signatureViewController.modalPresentationStyle = UIModalPresentationPopover;
+    self.signatureViewController.preferredContentSize = CGSizeMake(BBPopoverSignatureWidth, BBPopoverSignatureHeight);
+    self.signatureViewController.signatureImageView = self;
+    
+    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(initiateSignatureCapture)];
+    [self addGestureRecognizer:tapRecognizer];
+}
+```
+Note: 
+
+1. all the `signatureViewController`-related lines are together
+2. the new line delimits the end of configuration of `signatureViewController`
+3. the `tapRecognizer` instantiation and configuration is grouped, and not mixed with unrelated code
+4. a new line after the opening `{` and a new line before the closing `}` are permissible. In some cases they aid readability and in others they yield an overabundance of whitespace.
+
+Good:
+```objc
+- (NSAttributedString *)aboutTermsAttributedString {
+
+    NSDictionary *attributes = nil;
+    NSError *error = nil;
+
+    NSURL *fileURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"terms_of_use" ofType:@"html"]];
+    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithFileURL:fileURL 
+                                                                               options:@{NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: @(NSUTF8StringEncoding)}
+                                                                    documentAttributes:&attributes
+                                                                                 error:&error];
+    if (error) {
+        NSLog(@"Error: unable to load about mobile string. %@", [error localizedDescription]);
+        return nil;
+    }
+
+    return attributedString;
+}
+```
+Note:
+
+1. blank line after the opening `{` of the method helps give the local variables their own context
+2. complexity of `attributedString` initialization is more readable with colon aligning
+3. final return value is immediately clear thanks to the blank line above it
+
+Good:
+```objc
+
+@interface BBProofOfLossViewController () <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, BBAutocompletePopoverDateTextFieldDelegate, BBPopoverSignatureImageViewDelegate>
+
+@property (strong, nonatomic) NSArray *targetItems;
+@property (strong, nonatomic) BBCustomForm *customForm;
+
+@property (weak, nonatomic) IBOutlet UILabel *nameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *addressLabel;
+@property (weak, nonatomic) IBOutlet UILabel *fooLabel;
+@property (weak, nonatomic) IBOutlet UILabel *barLabel;
+@property (weak, nonatomic) IBOutlet UILabel *instanceNumberLabel;
+@property (weak, nonatomic) IBOutlet UILabel *relatedNumberLabel;
+@property (weak, nonatomic) IBOutlet UILabel *bazLabel;
+@property (weak, nonatomic) IBOutlet UILabel *typeOfInstanceLabel;
+@property (weak, nonatomic) IBOutlet UILabel *dateLabel;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *itemListHeightConstraint;
+
+@property (weak, nonatomic) IBOutlet BBAutocompletePopoverDateTextField *formDatePopoverTextField;
+
+@property (weak, nonatomic) IBOutlet BBPopoverSignatureImageView *witnessSignatureImageView;
+@property (weak, nonatomic) IBOutlet UITextField *witnessSignatureBackgroundTextField;
+@property (weak, nonatomic) IBOutlet UILabel *witnessNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *witnessLocationLabel;
+@property (weak, nonatomic) IBOutlet UILabel *witnessDateLabel;
+
+@property (weak, nonatomic) IBOutlet BBPopoverSignatureImageView *submitterSignatureImageView;
+@property (weak, nonatomic) IBOutlet UITextField *submitterSignatureBackgroundTextField;
+@property (weak, nonatomic) IBOutlet UILabel *submitterNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *submitterLocationLabel;
+@property (weak, nonatomic) IBOutlet UILabel *submitterDateLabel;
+
+@property (weak, nonatomic) IBOutlet BBPopoverSignatureImageView *authorizerSignatureImageView;
+@property (weak, nonatomic) IBOutlet UITextField *authorizerSignatureBackgroundTextField;
+@property (weak, nonatomic) IBOutlet UILabel *authorizerNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *authorizerLocationLabel;
+@property (weak, nonatomic) IBOutlet UILabel *authorizerDateLabel;
+
+@end
+
+```
+Note:
+
+1. new line after the `@interface` and before the `@end`
+2. properties that are *not* `IBOutlet`s are grouped
+3. `IBOutlet` properties are grouped by context
+4. the patterns in the grouping aid readability by allowing the eye to see inconsistencies (there are none in this case)
+
+Bad:
+```objc
+
+- (void)viewController:(BBViewController *)viewController
+        finishedWithAuth:(BBAuthentication *)auth
+        error:(NSError *)error {
+
+    //pushViewController didn't work, use ugly full screen view
+    [viewController dismissViewControllerAnimated:YES completion:nil];
+
+    if (error != nil) {
+
+        NSLog(@"Authentication failed %@", [error description]);
+
+    } else {
+
+        NSString *apiURL = @"https://api.example.com/v1/quux/~?format=json";
+
+        NSURL *url = [NSURL URLWithString:apiURL];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+
+        [auth authorizeRequest:request completionHandler:^(NSError *error) {
+
+            AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+            operation.responseSerializer = [AFJSONResponseSerializer serializer];
+            [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+
+                NSDictionary *responseData = (NSDictionary *)responseObject;
+                RBKQuickAlert(@"Response description", responseData.description);
+
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+
+                RBKQuickAlert(@"Response error", error.description);
+
+            }];
+
+            [operation start];
+
+        }];
+
+    }
+
+}
+```
+Note: 
+
+1. method colons aren't aligned. (Method signature is not well suited to colon aligning)
+2. Happy path is nested. (Early return is missing)
+3. Lots of extra blank lines that break up readability. (Whitespace is failing to define context)
+4. URL string is hardcoded (not environment-aware)
+5. `NSMutableURLRequest` instantiation is spread over several lines
+
+Bad rewritten better:
+
+```objc
+
+// DEV_BUILD/STAGE_BUILD/PROD_BUILD are configured in Project Build Settings Preprocessor Macros
+#if DEV_BUILD
+static NSString * const BBAPIBaseURLString = @"https://dev.example.com/v1/quux/~?format=json"; // dev
+
+#elif QA_BUILD 
+static NSString * const BBAPIBaseURLString = @"https://qa.example.com/v1/quux/~?format=json"; // qa
+
+#elif STAGE_BUILD
+static NSString * const BBAPIBaseURLString = @"https://stage.example.com/v1/quux/~?format=json"; // stage
+
+#elif PROD_BUILD
+static NSString * const BBAPIBaseURLString = @"https://api.example.com/v1/quux/~?format=json"; // prod
+
+#else
+static NSString * const BBAPIBaseURLString = @"https://api.example.com/v1/quux/~?format=json"; // prod
+
+#endif
+
+- (void)viewController:(BBViewController *)viewController finishedWithAuth:(BBAuthentication *)auth error:(NSError *)error {
+
+    //pushViewController didn't work, use ugly full screen view
+    [viewController dismissViewControllerAnimated:YES completion:nil];
+
+    if (error) {
+        NSLog(@"Authentication failed %@", [error localizedDescription]);
+
+        // TODO: call our own completion block with this error?
+
+	     return;
+    }
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:BBAPIBaseURLString]]; // mutable in case we need to adjust the request headers
+    [auth authorizeRequest:request completionHandler:^(NSError *error) {
+        
+        // we should probably be checking the supplied error to decided if we need to do this operation or not
+        
+        AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+        operation.responseSerializer = [AFJSONResponseSerializer serializer];
+        [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+            NSDictionary *responseData = (NSDictionary *)responseObject;
+            
+            // TODO: Handle our response data. Call our own completion block?
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"Error: %@", error.localizedDescription);
+            
+            // TODO: call our own completion block when we have an error?
+        }];
+        
+        [operation start];
+    }];
+}
+```
+Note: This method is obviously incomplete and may not, *architecturally* be optimal, however it can be still styled in a readable manner.
+
 Organization
 ============
 
@@ -84,6 +363,7 @@ Organization
 
 ```objc
 #pragma mark - Lifecycle
+
 + (instancetype)objectWithThing:(id)thing {}
 - (instancetype)init {}
 - (void)dealloc {}
@@ -635,15 +915,17 @@ Magic numbers that are integers should be stored in an enum.  If you want to use
 
 ```objc
 typedef NS_ENUM(NSUInteger, VPLeftMenuTopItemType) {
-    VPLeftMenuTopItemMain = 0,
-    VPLeftMenuTopItemShows,
-    VPLeftMenuTopItemSchedule,
-    VPLeftMenuTopItemWatchLive,
-    VPLeftMenuTopItemMax,
+    VPLeftMenuTopItemTypeMain = 0,
+    VPLeftMenuTopItemTypeShows,
+    VPLeftMenuTopItemTypeSchedule,
+    VPLeftMenuTopItemTypeWatchLive,
+    VPLeftMenuTopItemTypeMax,
 };
 ```
 
 In this case each successive item in the enum will have an integer value greater than the previous item.
+
+Naming in this ^ style also makes the enum Swift-compatible. (e.g. `.Main`, `.WatchLive`)
 
 You can also make explicit value assignments (showing older k-style constant definition):
 
