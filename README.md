@@ -114,7 +114,8 @@ Good:
     NSURL *fileURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"terms_of_use" ofType:@"html"]];
     NSAttributedString *attributedString = [[NSAttributedString alloc] initWithFileURL:fileURL 
                                                                                options:@{NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: @(NSUTF8StringEncoding)}
-                                                                    documentAttributes:&attributes error:&error];
+                                                                    documentAttributes:&attributes
+                                                                                 error:&error];
     if (error) {
         NSLog(@"Error: unable to load about mobile string. %@", [error localizedDescription]);
         return nil;
