@@ -81,7 +81,7 @@ Bad:
   * Use new lines to delimit chunks of related code (approx 4-5 lines). If more than 4-5 lines are grouped, consider refactoring those lines into another method.
   * One blank line is generally sufficient.
   * Avoid extraneous new lines between nested sets of parenthesis.
-  * Use blank lines at the end of methods judiciously.
+  * Avoid blank lines at the end of methods. (Consider delimiting the final return value with one though.)
 
 Good:
   
@@ -97,13 +97,37 @@ Good:
     [self addGestureRecognizer:tapRecognizer];
 }
 ```
-
 Note: 
 
 1. all the `signatureViewController`-related lines are together
 2. the new line delimits the end of configuration of `signatureViewController`
 3. the `tapRecognizer` instantiation and configuration is grouped, and not mixed with unrelated code
 4. a new line after the opening `{` and a new line before the closing `}` are permissible. In some cases they aid readability and in others they yield an overabundance of whitespace.
+
+Good:
+```objc
+- (NSAttributedString *)aboutTermsAttributedString {
+
+    NSDictionary *attributes = nil;
+    NSError *error = nil;
+
+    NSURL *fileURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"terms_of_use" ofType:@"html"]];
+    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithFileURL:fileURL 
+                                                                               options:@{NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: @(NSUTF8StringEncoding)}
+                                                                    documentAttributes:&attributes error:&error];
+    if (error) {
+        NSLog(@"Error: unable to load about mobile string. %@", [error localizedDescription]);
+        return nil;
+    }
+
+    return attributedString;
+}
+```
+Note:
+
+1. blank line after the opening `{` of the method helps give the local variables their own context
+2. complexity of `attributedString` initialization is more readable with colon aligning
+3. final return value is immediately clear thanks to the blank line above it
 
 Good:
 ```objc
@@ -235,7 +259,7 @@ static NSString * const BBAPIBaseURLString = @"https://api.example.com/v1/quux/~
     [viewController dismissViewControllerAnimated:YES completion:nil];
 
     if (error) {
-        NSLog(@"Authentication failed %@", error.localizedDescription);
+        NSLog(@"Authentication failed %@", [error localizedDescription]);
 
         // TODO: call our own completion block with this error?
 
