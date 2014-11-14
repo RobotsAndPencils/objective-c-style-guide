@@ -77,6 +77,192 @@ Bad:
                  }];
 ```
 
+* Whitespace should in *all* cases be used to aid readability. Readability is highly subjective, so here are some rough guides:
+  * Use new lines to delimit chunks of related code (approx 4-5 lines). If more than 4-5 lines are grouped, consider refactoring those lines into another method.
+  * One blank line is generally sufficient.
+  * Avoid extraneous new lines between nested sets of parenthesis.
+  * Use blank lines at the end of methods judiciously.
+
+Good:
+  
+```objc
+- (void)awakeFromNib {
+    UIStoryboard *signatureStoryboard = [UIStoryboard storyboardWithName:@"BBPopoverSignature" bundle:nil];
+    self.signatureViewController = [signatureStoryboard instantiateViewControllerWithIdentifier:@"BBPopoverSignature"];
+    self.signatureViewController.modalPresentationStyle = UIModalPresentationPopover;
+    self.signatureViewController.preferredContentSize = CGSizeMake(BBPopoverSignatureWidth, BBPopoverSignatureHeight);
+    self.signatureViewController.signatureImageView = self;
+    
+    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(initiateSignatureCapture)];
+    [self addGestureRecognizer:tapRecognizer];
+}
+```
+
+Note: 
+
+1. all the `signatureViewController`-related lines are together
+2. the new line delimits the end of configuration of `signatureViewController`
+3. the `tapRecognizer` instantiation and configuration is grouped, and not mixed with unrelated code
+4. a new line after the opening `{` and a new line before the closing `}` are permissible. In some cases they aid readability and in others they yield and overabundance of whitespace.
+
+Good:
+```objc
+
+@interface BBProofOfLossViewController () <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, BBAutocompletePopoverDateTextFieldDelegate, BBPopoverSignatureImageViewDelegate>
+
+@property (strong, nonatomic) NSArray *insuredItems;
+@property (strong, nonatomic) BBProofOfLossForm *proofOfLossForm;
+
+@property (weak, nonatomic) IBOutlet UILabel *nameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *addressLabel;
+@property (weak, nonatomic) IBOutlet UILabel *fooLabel;
+@property (weak, nonatomic) IBOutlet UILabel *barLabel;
+@property (weak, nonatomic) IBOutlet UILabel *instanceNumberLabel;
+@property (weak, nonatomic) IBOutlet UILabel *relatedNumberLabel;
+@property (weak, nonatomic) IBOutlet UILabel *bazLabel;
+@property (weak, nonatomic) IBOutlet UILabel *typeOfInstanceLabel;
+@property (weak, nonatomic) IBOutlet UILabel *dateLabel;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *itemListHeightConstraint;
+
+@property (weak, nonatomic) IBOutlet BBAutocompletePopoverDateTextField *formDatePopoverTextField;
+
+@property (weak, nonatomic) IBOutlet BBPopoverSignatureImageView *witnessSignatureImageView;
+@property (weak, nonatomic) IBOutlet UITextField *witnessSignatureBackgroundTextField;
+@property (weak, nonatomic) IBOutlet UILabel *witnessNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *witnessLocationLabel;
+@property (weak, nonatomic) IBOutlet UILabel *witnessDateLabel;
+
+@property (weak, nonatomic) IBOutlet BBPopoverSignatureImageView *submitterSignatureImageView;
+@property (weak, nonatomic) IBOutlet UITextField *submitterSignatureBackgroundTextField;
+@property (weak, nonatomic) IBOutlet UILabel *submitterNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *submitterLocationLabel;
+@property (weak, nonatomic) IBOutlet UILabel *submitterDateLabel;
+
+@property (weak, nonatomic) IBOutlet BBPopoverSignatureImageView *authorizerSignatureImageView;
+@property (weak, nonatomic) IBOutlet UITextField *authorizerSignatureBackgroundTextField;
+@property (weak, nonatomic) IBOutlet UILabel *authorizerNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *authorizerLocationLabel;
+@property (weak, nonatomic) IBOutlet UILabel *authorizerDateLabel;
+
+@end
+
+```
+Note:
+
+1. new line after the `@interface` and before the `@end`
+2. properties that are *not* `IBOutlet`s are grouped
+3. `IBOutlet` properties are grouped by context
+4. the patterns in the grouping aid readability by allowing the eye to see inconsistencies (there are none in this case)
+
+Bad:
+```objc
+
+- (void)viewController:(BBViewController *)viewController
+        finishedWithAuth:(BBAuthentication *)auth
+        error:(NSError *)error {
+
+    //pushViewController didn't work, use ugly full screen view
+    [viewController dismissViewControllerAnimated:YES completion:nil];
+
+    if (error != nil) {
+
+        NSLog(@"Authentication failed %@", [error description]);
+
+    } else {
+
+        NSString *apiURL = @"https://api.example.com/v1/quux/~?format=json";
+
+        NSURL *url = [NSURL URLWithString:apiURL];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+
+        [auth authorizeRequest:request completionHandler:^(NSError *error) {
+
+            AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+            operation.responseSerializer = [AFJSONResponseSerializer serializer];
+            [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+
+                NSDictionary *responseData = (NSDictionary *)responseObject;
+                RBKQuickAlert(@"Response description", responseData.description);
+
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+
+                RBKQuickAlert(@"Response error", error.description);
+
+            }];
+
+            [operation start];
+
+        }];
+
+    }
+
+}
+```
+Note: 
+
+1. method colons aren't aligned. (Method signature is not well suited to colon aligning)
+2. Happy path is nested. (Early return is missing)
+3. Lots of extra blank lines that break up readability
+4. URL string is hardcoded (not environment-aware)
+5. `NSMutableURLRequest` instantiation is spread over several lines
+
+Bad rewritten better:
+
+```objc
+
+// DEV_BUILD/STAGE_BUILD/PROD_BUILD are configured in Project Build Settings Preprocessor Macros
+#if DEV_BUILD
+static NSString * const BBAPIBaseURLString = @"https://dev.example.com/v1/quux/~?format=json"; // dev
+
+#elif QA_BUILD 
+static NSString * const BBAPIBaseURLString = @"https://qa.example.com/v1/quux/~?format=json"; // qa
+
+#elif STAGE_BUILD
+static NSString * const BBAPIBaseURLString = @"https://stage.example.com/v1/quux/~?format=json"; // stage
+
+#elif PROD_BUILD
+static NSString * const BBAPIBaseURLString = @"https://api.example.com/v1/quux/~?format=json"; // prod
+
+#else
+static NSString * const BBAPIBaseURLString = @"https://api.example.com/v1/quux/~?format=json"; // prod
+
+#endif
+
+- (void)viewController:(BBViewController *)viewController finishedWithAuth:(BBAuthentication *)auth error:(NSError *)error {
+
+    //pushViewController didn't work, use ugly full screen view
+    [viewController dismissViewControllerAnimated:YES completion:nil];
+
+    if (error) {
+        NSLog(@"Authentication failed %@", [error description]);
+	     return;
+    }
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:BBAPIBaseURLString]]; // mutable in case we need to adjust the request headers
+    [auth authorizeRequest:request completionHandler:^(NSError *error) {
+        
+        // we should probably be checking the supplied error to decided if we need to do this operation or not
+        
+        AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+        operation.responseSerializer = [AFJSONResponseSerializer serializer];
+        [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+            NSDictionary *responseData = (NSDictionary *)responseObject;
+            
+            // TODO: Handle our response data. Call our own completion block?
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"Error: %@", error.localizedDescription);
+            
+            // TODO: call our own completion block when we have an error?
+        }];
+        
+        [operation start];
+    }];
+}
+```
+Note: This method is obviously incomplete and may not, *architecturally* be optimal, however it can be still styled in a readable manner.
+
 Organization
 ============
 
@@ -635,15 +821,17 @@ Magic numbers that are integers should be stored in an enum.  If you want to use
 
 ```objc
 typedef NS_ENUM(NSUInteger, VPLeftMenuTopItemType) {
-    VPLeftMenuTopItemMain = 0,
-    VPLeftMenuTopItemShows,
-    VPLeftMenuTopItemSchedule,
-    VPLeftMenuTopItemWatchLive,
-    VPLeftMenuTopItemMax,
+    VPLeftMenuTopItemTypeMain = 0,
+    VPLeftMenuTopItemTypeShows,
+    VPLeftMenuTopItemTypeSchedule,
+    VPLeftMenuTopItemTypeWatchLive,
+    VPLeftMenuTopItemTypeMax,
 };
 ```
 
 In this case each successive item in the enum will have an integer value greater than the previous item.
+
+Naming in this ^ style also makes the enum Swift-compatible. (e.g. `.Main`, `.WatchLive`)
 
 You can also make explicit value assignments (showing older k-style constant definition):
 
