@@ -99,6 +99,22 @@ Whitespace
 }
 ```
 
+* When doing math use a single space between operators. Unless that operator is unary in which case don't use a space.
+
+```obj-c
+NSInteger index = rand() % 50 + 25; // arc4random_uniform(50) should be used insted of `rand()`, but doesn't illustrate the principle well
+index++;
+index += 1;
+index--;
+```
+
+* When doing logic, a single space should follow the `if` and preceed the `{`
+
+``` obj-c
+if (alpha + beta <= 0) && (kappa + phi > 0) {
+}
+```
+
 * Colon-aligning method invocation should often be avoided.  There are cases where a method signature may have >= 3 colons and colon-aligning makes the code more readable. Please do **NOT** however colon align methods containing blocks because Xcode's indenting makes it illegible.
 
 Good:
