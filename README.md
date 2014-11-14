@@ -51,6 +51,54 @@ Whitespace
 ==========
 
 * Indent using 4 spaces. Never indent with tabs. Be sure to set this preference in Xcode (Xcode defaults to 4 spaces).
+
+* Separate imports from the rest of your file by 1 space. Optionally group imports if there are many (but try to have less dependencies). Frameworks first?
+
+``` obj-c
+#import <AwesomeFramework/AwesomeFramework.h>
+#import <AnotherFramework/AnotherFramework.h>
+
+#import "SomeDependency.h"
+#import "SomeOtherDependency.h"
+
+@interface MyClass
+```
+
+* Use one empty line between class extension and implementation in .m file.
+
+``` obj-c
+@interface MyClass ()
+
+// Properties - empty line above and below
+
+@end
+
+@implementation MyClass
+
+// Body - empty line above and below
+
+@end
+
+```
+
+* Always end a file with a newline.
+
+![](http://cl.ly/image/2g3b0C2a3F0c/Image%202014-11-14%20at%2010.51.17%20AM.png)
+
+* When using pragma marks leave 1 newline before and after.
+
+``` obj-c
+- (CGSize)intrinsicContentSize {
+    return CGSizeMake(12, 12);
+}
+
+#pragma mark - Private
+
+- (void)setup {
+    [self addGestureRecognizer:[[NSClickGestureRecognizer alloc] initWithTarget:self action:@selector(clicked:)]];
+}
+```
+
 * Colon-aligning method invocation should often be avoided.  There are cases where a method signature may have >= 3 colons and colon-aligning makes the code more readable. Please do **NOT** however colon align methods containing blocks because Xcode's indenting makes it illegible.
 
 Good:
