@@ -838,7 +838,7 @@ Descriptive names should generally avoid conflicts, however there are tangible b
 
 * filter visible files in the project navigator in Xcode
 * allow you to ignore search results in files without your desired prefix
-* convey the ancentry of the class (as sometimes classes have been reused between projects)
+* convey the ancestry of the class (as sometimes classes have been reused between projects)
 * distinguish between components of the app
 
 Shared code should be definitely be prefixed (e.g. in RoboKit).
