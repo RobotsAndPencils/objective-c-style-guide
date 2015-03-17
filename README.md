@@ -536,12 +536,13 @@ Bad:
 self.nameLabel.text = [self getPersonWithId:idNumber].name;
 ```
 
-* Similarly, use the dot syntax to get or set properties instead of the method equivalent.
+* Similarly, use dot syntax to get or set properties over explicit message sending.
+* Also, use `NSInteger` or `NSUInteger` over `int`. 
 
 Good:
 
 ```objc
-NSUInteger numberOfItems = [sampleArray count]; // use NSInteger or NSUInteger instead of int
+NSUInteger numberOfItems = sampleArray.count;
 
 sampleView.backgroundColor = [UIColor greenColor];
 ```
@@ -549,9 +550,9 @@ sampleView.backgroundColor = [UIColor greenColor];
 Bad:
 
 ```objc
-int numberOfItems = sampleArray.count;
+int numberOfItems = [sampleArray count]; // using int and explicit message sending
 
-[sampleView setBackgroundColor:[UIColor greenColor]];
+[sampleView setBackgroundColor:[UIColor greenColor]]; // explicit message sending
 ``` 
 
 * Use object literals, boxed expressions, and subscripting over the older, grosser alternatives.
