@@ -689,7 +689,7 @@ Bad:
 
 Getters
 -------
-If the method returns an attribute of the receiver, name the method after the attribute.  The use of "get" is unnecessary, unless one or more values are returned indirection.
+If the method returns an attribute of the receiver, name the method after the attribute.  The use of "get" is unnecessary, unless one or more values are returned via indirection.
 
 Good:
 
@@ -723,7 +723,7 @@ Bad:
 
 Parameter Keywords
 ------------------
-Use keywords before all parameters
+Use keywords before all parameters.
 
 Good:
 
@@ -753,7 +753,7 @@ Bad:
 - (id)taggedView:(NSInteger)tag;
 ``` 
     
-**Note: this is a poor example because in general tags are an antipattern and should be avoided if at all possible**
+**Note: this is a poor example because in general tags are an antipattern and should be avoided if at all possible**.
 
 Avoid And (With Exceptions)
 ---------------------------
@@ -797,7 +797,7 @@ Bad:
 
 Init Methods
 ---------------
-Init methods should return instancetype instead of id. Generally this is the one place ivars should be used instead of properties because the class may be in an inconsistent state until it is fully initialized.
+Init methods should return `instancetype` instead of `id`. Generally this is the one place ivars should be used instead of properties because the class may be in an inconsistent state until it is fully initialized.
 
 ```objc
 - (instancetype)init {
@@ -928,7 +928,7 @@ In this case each successive item in the enum will have an integer value greater
 
 Naming in this ^ style also makes the enum Swift-compatible. (e.g. `.Main`, `.WatchLive`)
 
-You can also make explicit value assignments (showing older k-style constant definition):
+You can also make explicit value assignments:
 
 ```objc
 typedef NS_ENUM(NSInteger, RBKGlobalConstants) {
