@@ -2,7 +2,7 @@
 
 This documents the coding style adhered to at Robots & Pencils, enjoy!  Feel free to open a pull request if you think we are missing anything or would like to debate existing points.
 
-THIS IS SILLY CHANGE
+THIS IS SILLY CHANGE - fixed silliness
 
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
